@@ -1,4 +1,5 @@
 ﻿using AuthService.Application.Authentication.Common;
+using AuthService.Application.Common.ApiResonse;
 using AuthService.Application.Common.Interfaces;
 using AuthService.Domain.Entities;
 using System;
@@ -18,14 +19,14 @@ namespace AuthService.Application.Authentication.Services
             _userRepository = userRepository;
         }
 
-        public async Task<AuthenticationResponse> RegisterAsync(string firstName, string lastName, string email, string password)
+        public async Task<ApiResponse<AuthenticationResponse>> RegisterAsync(string firstName, string lastName, string email, string password)
         {
             // 1. Check if user already exists
-            var existingUserTask = _userRepository.GetByEmailAsync(email);
-            existingUserTask.Wait();
-            if (existingUserTask.Result is not null)
+            var existingUser = await _userRepository.GetByEmailAsync(email);
+
+            if (existingUser is not null)
             {
-                throw new Exception("User with this email already exists.");
+                return ApiResponseFactory.Failed<AuthenticationResponse>("User with this email already exists.");
             }
 
             // 2. Create user (In a real app, hash the password!)
@@ -42,10 +43,10 @@ namespace AuthService.Application.Authentication.Services
             // 3. Create JWT token
             var token = _jwtTokenGenerator.GenerateToken(user);
 
-            return new AuthenticationResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
+            return ApiResponseFactory.Success(new AuthenticationResponse(user.Id, user.FirstName, user.LastName, user.Email, token), "User registered successfully.");
         }
 
-        public  async Task<AuthenticationResponse> LoginAsync(string email, string password)
+        public async Task<ApiResponse<AuthenticationResponse>> LoginAsync(string email, string password)
         {
             // 1. Validate the user exists
             var user = await _userRepository.GetByEmailAsync(email);
@@ -53,19 +54,19 @@ namespace AuthService.Application.Authentication.Services
 
             if (user is null)
             {
-                throw new Exception("Invalid email or password.");
+                return ApiResponseFactory.Failed<AuthenticationResponse>("Invalid email or password.");
             }
 
             // 2. Validate the password
             if (user.PasswordHash != password)
             {
-                throw new Exception("Invalid email or password.");
+                return ApiResponseFactory.Failed<AuthenticationResponse>("Invalid email or password.");
             }
 
             // 3. Create JWT token
             var token = _jwtTokenGenerator.GenerateToken(user);
 
-            return new AuthenticationResponse(user.Id, user.FirstName, user.LastName, user.Email, token);
+            return ApiResponseFactory.Success(new AuthenticationResponse(user.Id, user.FirstName, user.LastName, user.Email, token), "User Login successfully.");
         }
     }
 }

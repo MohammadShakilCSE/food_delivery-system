@@ -7,7 +7,7 @@ namespace AuthService.Application.Authentication.Services
 {
     public interface IAuthenticationService
     {
-        Task<AuthenticationResponse> RegisterAsync(string firstName, string lastName, string email, string password);
-        Task<AuthenticationResponse> LoginAsync(string email, string password);
+        Task<ApiResponse<AuthenticationResponse>> RegisterAsync(string firstName, string lastName, string email, string password);
+        Task<ApiResponse<AuthenticationResponse>> LoginAsync(string email, string password);
     }
 }
