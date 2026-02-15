@@ -1,0 +1,6 @@
+<Solution>
+  <Project Path="E:/food-delivery/food_delivery-system/services/order-service/OrderService.Api/OrderService.Api.csproj" />
+  <Project Path="E:/food-delivery/food_delivery-system/services/order-service/OrderService.Application/OrderService.Application.csproj" Id="2ffecfee-b42f-4964-a3e2-7a5c3fdfa42e" />
+  <Project Path="E:/food-delivery/food_delivery-system/services/order-service/OrderService.Domain/OrderService.Domain.csproj" Id="90eeca96-bf9b-4bbc-83fc-f8fd66a962e4" />
+  <Project Path="E:/food-delivery/food_delivery-system/services/order-service/OrderService.Infrastructure/OrderService.Infrastructure.csproj" Id="185f71df-901f-4d4e-8c29-8fd15a15d932" />
+</Solution>
