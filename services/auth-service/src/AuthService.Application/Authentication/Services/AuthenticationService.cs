@@ -1,10 +1,6 @@
 ﻿using AuthService.Application.Authentication.Common;
 using AuthService.Application.Common.ApiResonse;
 using AuthService.Application.Common.Interfaces;
-using AuthService.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace AuthService.Application.Authentication.Services
 {
@@ -30,20 +26,20 @@ namespace AuthService.Application.Authentication.Services
             }
 
             // 2. Create user (In a real app, hash the password!)
-            var user = new User
-            {
-                FirstName = firstName,
-                LastName = lastName,
-                Email = email,
-                PasswordHash = password
-            };
+            //var user = new User
+            //{
+            //    FirstName = firstName,
+            //    LastName = lastName,
+            //    Email = email,
+            //    PasswordHash = password
+            //};
 
-            await _userRepository.AddAsync(user);
+            //await _userRepository.AddAsync(user);
 
             // 3. Create JWT token
-            var token = _jwtTokenGenerator.GenerateToken(user);
+            var token = _jwtTokenGenerator.GenerateToken(existingUser);
 
-            return ApiResponseFactory.Success(new AuthenticationResponse(user.Id, user.FirstName, user.LastName, user.Email, token), "User registered successfully.");
+            return ApiResponseFactory.Success(new AuthenticationResponse(existingUser.Id, existingUser.FirstName, existingUser.LastName, existingUser.Email, token), "User registered successfully.");
         }
 
         public async Task<ApiResponse<AuthenticationResponse>> LoginAsync(string email, string password)
